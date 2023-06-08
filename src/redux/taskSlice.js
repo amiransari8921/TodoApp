@@ -15,13 +15,11 @@ export const taskSlice = createSlice({
       return state.filter(item => item.id !== action.payload.id);
     },
     updateTask: (state, action) => {
-      // const {id, newName} = action.payload;
-      // for (const item in state) {
-      //   if (item.id === id) {
-      //     item.name = newName;
-      //   }
-      // }
-      console.log(action.payload);
+      const {id, todo} = action.payload;
+      const task = state.find(task => task.id === id);
+      if (task) {
+        task.name = todo;
+      }
     },
   },
 });

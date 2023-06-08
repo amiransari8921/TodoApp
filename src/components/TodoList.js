@@ -32,7 +32,7 @@ const TodoList = () => {
   };
 
   //while updating a task
-  const onUpdate = async (id, name) => {
+  const onUpdate = (id, name) => {
     setisModalVisible(true);
     setInputText(name);
     setid(id);
@@ -57,13 +57,12 @@ const TodoList = () => {
     );
   };
 
-  const onPressSaveEdit = async () => {
-    setTaskName(inputText);
+  const onPressSaveEdit = () => {
     setisModalVisible(false);
     dispatch(
       updateTask({
         id: id,
-        todo: taskName,
+        todo: inputText,
       }),
     );
   };
