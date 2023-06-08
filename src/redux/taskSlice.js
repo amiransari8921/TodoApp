@@ -1,14 +1,10 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import {createSlice, nanoid} from '@reduxjs/toolkit';
 
 export const taskSlice = createSlice({
-  name: "tasks",
+  name: 'tasks',
   initialState: [],
   reducers: {
     addTask: (state, action) => {
-      console.log(nanoid());
-      // 'dgPXxUz_6fWIQBD8XmiSy'
-
-      console.log(action.payload);
       const newTask = {
         id: nanoid(),
         name: action.payload.task,
@@ -16,13 +12,20 @@ export const taskSlice = createSlice({
       state.push(newTask);
     },
     deleteTask: (state, action) => {
-      console.log(action.payload.id);
-      console.log(state);
-      return state.filter((item) => item.id !== action.payload.id);
+      return state.filter(item => item.id !== action.payload.id);
+    },
+    updateTask: (state, action) => {
+      // const {id, newName} = action.payload;
+      // for (const item in state) {
+      //   if (item.id === id) {
+      //     item.name = newName;
+      //   }
+      // }
+      console.log(action.payload);
     },
   },
 });
 
-export const { addTask, deleteTask } = taskSlice.actions;
+export const {addTask, deleteTask, updateTask} = taskSlice.actions;
 
 export default taskSlice.reducer;
