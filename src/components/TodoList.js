@@ -20,7 +20,6 @@ const TodoList = () => {
   const [isModalVisible, setisModalVisible] = useState(false);
   const [inputText, setInputText] = useState('');
   const [id, setid] = useState('');
-  const [taskName, setTaskName] = useState('');
 
   //delete item by checking if id is equal to the id of the item
   const onDelete = id => {
@@ -36,6 +35,10 @@ const TodoList = () => {
     setisModalVisible(true);
     setInputText(name);
     setid(id);
+  };
+
+  const cancelEdit = () => {
+    setisModalVisible(false);
   };
 
   //renderItem function with a delete and edit button
@@ -78,9 +81,9 @@ const TodoList = () => {
         animationType="fade"
         visible={isModalVisible}
         onRequestClose={() => setisModalVisible(false)}>
-        <View>
-          <Text>Change to :</Text>
+        <View style={styles.popup}>
           <TextInput
+            style={styles.textInput}
             onChangeText={text => {
               setInputText(text);
             }}
@@ -90,7 +93,13 @@ const TodoList = () => {
             onPress={() => {
               onPressSaveEdit();
             }}>
-            <Text>Save</Text>
+            <Text style={styles.button}>Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              cancelEdit();
+            }}>
+            <Text style={styles.button}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -122,4 +131,34 @@ const styles = StyleSheet.create({
     width: 12,
     color: 'blue',
   },
+  popup: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#e9e9e9',
+    fontSize: 24,
+    padding: 20,
+  },
+  text: {
+    fontSize: 24,
+    padding: 20,
+  },
+  button:{
+    borderColor: "gray",
+      borderWidth: 1,
+      padding: 10,
+      margin: 10,
+      width: 90,
+      textAlign:'center',
+      borderRadius: 5,
+      backgroundColor:'grey'
+  },
+  textInput:{
+    borderColor:'black',
+    borderWidth:1,
+    width:'100%',
+    alignItems:'center',
+    textAlign:'center',
+    marginBottom:15
+  }
 });
