@@ -17,8 +17,10 @@ export const taskSlice = createSlice({
     },
     updateTask: (state, action) => {
       const {id, text} = action.payload;
-      // 
-      console.log(action.payload);
+      const item = state.find( item => item.id===id);
+      if (item){
+        item.name= text;
+      }
     },
     updateState: (state, action) => {
       const id=action.payload.id;

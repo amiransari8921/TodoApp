@@ -9,7 +9,7 @@ import TodoHeader from "./src/components/TodoHeader";
 import TodoList from "./src/components/TodoList";
 
 //import store from "./src
-import store from "./src/redux/store";
+import store from "./src/store/store";
 //import Provider
 import { Provider } from "react-redux";
 

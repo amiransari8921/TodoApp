@@ -4,23 +4,18 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Modal,
   TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
 //Ionicons
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
-import {deleteTask, updateState, updateTask} from '../redux/taskSlice';
+import {deleteTask, updateState, updateTask} from '../store/taskSlice';
 import {useDispatch} from 'react-redux';
 
 const TodoList = () => {
   const dispatch = useDispatch();
   const todos = useSelector(state => state.tasks);
-  const [inputText, setInputText] = useState('');
-  // const [isModalVisible, setisModalVisible] = useState(false);
-  // const [editMode, setEditMode] = useState(false);
-  // const [id, setid] = useState('');
 
   //delete item by checking if id is equal to the id of the item
   const onDelete = id => {
@@ -30,52 +25,36 @@ const TodoList = () => {
       }),
     );
   };
-
-  const handleSave = (id,text) => {
-    dispatch(updateTask({id,text}));
+  const handleChange = (id, text) => {
+    dispatch(updateTask({id, text}));
   };
 
-  const handleCancel = (id) => {
+  const handleSave = id => {
     dispatch(updateState({id}));
   };
 
-
   //while updating a task
   const onUpdate = (id, name) => {
-    // setisModalVisible(true);
-    // setInputText(name);
-    // setid(id);
-    dispatch(updateState({id:id}));
+    dispatch(updateState({id: id}));
   };
-
-  // const cancelEdit = () => {
-  //   setisModalVisible(false);
-  // };
 
   //renderItem function with a delete and edit button
   const renderItem = ({item}) => {
     if (item.editMode) {
-      setInputText(item.name);
       return (
         <View style={styles.item}>
-          <TextInput style={styles.textInput} onChangeText={(text)=>{setInputText(text)}} defaultValue={inputText} ></TextInput>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => {
+              handleChange(item.id, text);
+            }}
+            defaultValue={item.name}></TextInput>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              handleSave(item.id,inputText);
+              handleSave(item.id);
             }}>
-            <Text>
-            Save
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              handleCancel(item.id);
-            }}>
-            <Text>
-            Cancel
-            </Text>
+            <Text>Save</Text>
           </TouchableOpacity>
         </View>
       );
@@ -98,16 +77,6 @@ const TodoList = () => {
     );
   };
 
-  // const onPressSaveEdit = () => {
-  //   setisModalVisible(false);
-  //   dispatch(
-  //     updateTask({
-  //       id: id,
-  //       todo: inputText,
-  //     }),
-  //   );
-  // };
-
   return (
     <View>
       <FlatList
@@ -115,32 +84,6 @@ const TodoList = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
-      {/* <Modal
-        animationType="fade"
-        visible={isModalVisible}
-        onRequestClose={() => setisModalVisible(false)}>
-        <View style={styles.popup}>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={text => {
-              setInputText(text);
-            }}
-            defaultValue={inputText}
-            editable={true}></TextInput>
-          <TouchableOpacity
-            onPress={() => {
-              onPressSaveEdit();
-            }}>
-            <Text style={styles.button}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              cancelEdit();
-            }}>
-            <Text style={styles.button}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal> */}
     </View>
   );
 };
@@ -169,22 +112,14 @@ const styles = StyleSheet.create({
     width: 12,
     color: 'blue',
   },
-  popup: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#e9e9e9',
-    fontSize: 24,
-    padding: 20,
-  },
   text: {
     fontSize: 24,
     padding: 20,
   },
   button: {
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderColor: 'gray',
     borderWidth: 1,
     padding: 5,
@@ -192,12 +127,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 5,
     backgroundColor: 'grey',
+    marginBottom:11
   },
   textInput: {
     borderColor: 'black',
     borderWidth: 1,
-    borderRadius:15,
-    width: '60%',
+    borderRadius: 15,
+    width: '75%',
     alignItems: 'center',
     textAlign: 'center',
     marginBottom: 15,

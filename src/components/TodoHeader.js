@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {addTask} from '../redux/taskSlice';
+import {addTask} from '../store/taskSlice';
 
 const TodoHeader = () => {
   const [todo, setTodo] = useState('');
