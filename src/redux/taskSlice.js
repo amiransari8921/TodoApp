@@ -8,6 +8,7 @@ export const taskSlice = createSlice({
       const newTask = {
         id: nanoid(),
         name: action.payload.task,
+        editMode: false,
       };
       state.push(newTask);
     },
@@ -15,15 +16,26 @@ export const taskSlice = createSlice({
       return state.filter(item => item.id !== action.payload.id);
     },
     updateTask: (state, action) => {
-      const {id, todo} = action.payload;
-      const task = state.find(task => task.id === id);
-      if (task) {
-        task.name = todo;
+      const {id, text} = action.payload;
+      // 
+      console.log(action.payload);
+    },
+    updateState: (state, action) => {
+      const id=action.payload.id;
+      console.log(id);
+      const item = state.find(item => item.id === id);
+      if (item){
+        if(item.editMode===false){
+          item.editMode=true;
+        }
+        else if (item.editMode===true){
+          item.editMode=false;
+        }
       }
     },
   },
 });
 
-export const {addTask, deleteTask, updateTask} = taskSlice.actions;
+export const {addTask, deleteTask, updateTask, updateState} = taskSlice.actions;
 
 export default taskSlice.reducer;

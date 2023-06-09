@@ -11,15 +11,16 @@ import React, {useState} from 'react';
 //Ionicons
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
-import {deleteTask, updateTask} from '../redux/taskSlice';
+import {deleteTask, updateState, updateTask} from '../redux/taskSlice';
 import {useDispatch} from 'react-redux';
 
 const TodoList = () => {
   const dispatch = useDispatch();
   const todos = useSelector(state => state.tasks);
-  const [isModalVisible, setisModalVisible] = useState(false);
   const [inputText, setInputText] = useState('');
-  const [id, setid] = useState('');
+  // const [isModalVisible, setisModalVisible] = useState(false);
+  // const [editMode, setEditMode] = useState(false);
+  // const [id, setid] = useState('');
 
   //delete item by checking if id is equal to the id of the item
   const onDelete = id => {
@@ -30,19 +31,56 @@ const TodoList = () => {
     );
   };
 
-  //while updating a task
-  const onUpdate = (id, name) => {
-    setisModalVisible(true);
-    setInputText(name);
-    setid(id);
+  const handleSave = (id,text) => {
+    dispatch(updateTask({id,text}));
   };
 
-  const cancelEdit = () => {
-    setisModalVisible(false);
+  const handleCancel = (id) => {
+    dispatch(updateState({id}));
   };
+
+
+  //while updating a task
+  const onUpdate = (id, name) => {
+    // setisModalVisible(true);
+    // setInputText(name);
+    // setid(id);
+    dispatch(updateState({id:id}));
+  };
+
+  // const cancelEdit = () => {
+  //   setisModalVisible(false);
+  // };
 
   //renderItem function with a delete and edit button
   const renderItem = ({item}) => {
+    if (item.editMode) {
+      setInputText(item.name);
+      return (
+        <View style={styles.item}>
+          <TextInput style={styles.textInput} onChangeText={(text)=>{setInputText(text)}} defaultValue={inputText} ></TextInput>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              handleSave(item.id,inputText);
+            }}>
+            <Text>
+            Save
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              handleCancel(item.id);
+            }}>
+            <Text>
+            Cancel
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.item}>
         <Text style={styles.title}>{item.name}</Text>
@@ -60,15 +98,15 @@ const TodoList = () => {
     );
   };
 
-  const onPressSaveEdit = () => {
-    setisModalVisible(false);
-    dispatch(
-      updateTask({
-        id: id,
-        todo: inputText,
-      }),
-    );
-  };
+  // const onPressSaveEdit = () => {
+  //   setisModalVisible(false);
+  //   dispatch(
+  //     updateTask({
+  //       id: id,
+  //       todo: inputText,
+  //     }),
+  //   );
+  // };
 
   return (
     <View>
@@ -77,7 +115,7 @@ const TodoList = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
-      <Modal
+      {/* <Modal
         animationType="fade"
         visible={isModalVisible}
         onRequestClose={() => setisModalVisible(false)}>
@@ -102,7 +140,7 @@ const TodoList = () => {
             <Text style={styles.button}>Cancel</Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
@@ -143,22 +181,25 @@ const styles = StyleSheet.create({
     fontSize: 24,
     padding: 20,
   },
-  button:{
-    borderColor: "gray",
-      borderWidth: 1,
-      padding: 10,
-      margin: 10,
-      width: 90,
-      textAlign:'center',
-      borderRadius: 5,
-      backgroundColor:'grey'
-  },
-  textInput:{
-    borderColor:'black',
-    borderWidth:1,
-    width:'100%',
+  button: {
+    flexDirection:'row',
     alignItems:'center',
-    textAlign:'center',
-    marginBottom:15
-  }
+    justifyContent:'center',
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 5,
+    width: 60,
+    textAlign: 'center',
+    borderRadius: 5,
+    backgroundColor: 'grey',
+  },
+  textInput: {
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius:15,
+    width: '60%',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 15,
+  },
 });
