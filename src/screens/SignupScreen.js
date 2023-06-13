@@ -17,7 +17,6 @@ export default function SignupScreen() {
   const handleSignUp = async () => {
     try {
       const user = await auth().createUserWithEmailAndPassword(email, password);
-      console.log(user);
       navigation.navigate('Login');
     } catch (err) {
       console.log(err);
